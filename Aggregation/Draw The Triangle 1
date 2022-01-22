@@ -1,0 +1,7 @@
+DECLARE @VAL int
+SELECT @VAL = 20
+WHILE @VAL >= 1
+BEGIN
+    PRINT REPLICATE('* ', @VAL)
+    SET @VAL = @VAL - 1
+END;

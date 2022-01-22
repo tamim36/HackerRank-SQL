@@ -1,0 +1,17 @@
+SELECT ch.hacker_id, hc.name, COUNT(ch.challenge_id) AS totalch
+    FROM Challenges ch
+    JOIN Hackers hc
+    ON hc.hacker_id = ch.hacker_id
+GROUP BY ch.hacker_id, hc.name
+HAVING COUNT(ch.challenge_id) NOT IN ( SELECT total
+FROM (
+SELECT c.hacker_id, h.name, COUNT(c.challenge_id) AS total,
+    ROW_NUMBER() OVER(PARTITION BY COUNT(c.challenge_id) ORDER BY c.hacker_id) AS rn
+    FROM Challenges c
+    JOIN Hackers h
+    ON h.hacker_id = c.hacker_id
+GROUP BY c.hacker_id, h.name
+    ) AS res
+    WHERE total != 50 AND rn > 1
+)
+ORDER BY totalch DESC, ch.hacker_id;

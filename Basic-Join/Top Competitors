@@ -1,0 +1,16 @@
+SELECT res.hacker_id, h.name FROM (
+SELECT s.hacker_id, COUNT(h.name) as tot
+FROM Submissions s
+JOIN Challenges c
+    ON s.Challenge_id = c.Challenge_id
+JOIN Difficulty d
+    ON c.difficulty_level = d.difficulty_level
+JOIN Hackers h
+    ON s.hacker_id = h.hacker_id
+WHERE d.score = s.score 
+GROUP BY s.hacker_id
+HAVING COUNT(s.hacker_id) > 1
+    ) AS res
+    JOIN Hackers h
+    ON res.hacker_id = h.hacker_id
+    ORDER BY res.tot DESC, res.hacker_id;
